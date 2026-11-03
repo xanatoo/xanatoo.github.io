@@ -1,0 +1,272 @@
+<!doctype html>
+<!-- SPDX-FileCopyrightText: 2026 Ingo Ruhnke <grumbel@gmail.com> -->
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>xanatoo — a document you can walk around in</title>
+<meta name="description" content="xanatoo is an interactive document composition engine: edit, stretch, link and browse in one place. Downloads for every platform.">
+<style>
+:root {
+  --paper: #f6f1e6;
+  --ink: #23201b;
+  --muted: #7a7164;
+  --rule: #d9cfbb;
+  --accent: #b4441f;
+  --wash: #ece4d2;
+  --link: #1d4f91;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #1b1915;
+    --ink: #e8e0d0;
+    --muted: #978d7c;
+    --rule: #38332a;
+    --accent: #e58a63;
+    --wash: #26231d;
+    --link: #8db6ee;
+  }
+}
+* { box-sizing: border-box; }
+html { font-size: 19px; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  hyphens: auto;
+}
+a { color: var(--link); text-underline-offset: .15em; }
+a:hover { color: var(--accent); }
+.page {
+  max-width: 62rem;
+  margin: 0 auto;
+  padding: 0 1.2rem 4rem;
+  display: grid;
+  grid-template-columns: minmax(0, 36rem) 14rem;
+  column-gap: 3rem;
+  justify-content: center;
+}
+.page > * { grid-column: 1; min-width: 0; }
+.page > aside { grid-column: 2; align-self: start; }
+
+/* masthead: a running head like a printed folio */
+.folio {
+  grid-column: 1 / -1 !important;
+  display: flex; justify-content: space-between; gap: 1rem;
+  padding: 1rem 0 .5rem;
+  border-bottom: 1px solid var(--rule);
+  font-variant: small-caps; letter-spacing: .08em;
+  font-size: .8rem; color: var(--muted);
+}
+.folio a { color: inherit; text-decoration: none; }
+.folio a:hover { color: var(--accent); }
+.folio nav { display: flex; gap: 1.2rem; }
+
+h1 {
+  font-size: 4.2rem; line-height: 1; letter-spacing: -.03em;
+  margin: 3.5rem 0 .6rem; font-weight: 600;
+}
+h1 span { color: var(--accent); }
+.lede { font-size: 1.25rem; line-height: 1.5; margin: 0 0 1.4rem; }
+h2 {
+  font-size: 1.5rem; margin: 3.2rem 0 .6rem; font-weight: 600; position: relative;
+}
+h2 .sec {
+  position: absolute; left: -1.4rem; color: var(--rule); text-decoration: none; font-weight: 400;
+}
+h2:hover .sec { color: var(--accent); }
+p { margin: 0 0 1rem; }
+.num { font-feature-settings: "onum", "pnum"; }
+
+/* margin notes */
+aside {
+  font-size: .8rem; line-height: 1.45; color: var(--muted);
+  border-top: 1px solid var(--rule); padding-top: .4rem;
+  margin-bottom: 1rem;
+}
+aside b { color: var(--ink); font-weight: 600; }
+@media (max-width: 62rem) {
+  .page { display: block; }
+  aside { margin: 0 0 1rem; max-width: 36rem; }
+  h2 .sec { display: none; }
+  h1 { font-size: 3.2rem; }
+}
+
+.shot {
+  margin: 1.6rem 0 0;
+}
+.shot img {
+  width: 100%; height: auto; display: block;
+  border: 1px solid var(--rule);
+  box-shadow: 6px 6px 0 var(--wash);
+}
+.shot figcaption { font-size: .8rem; color: var(--muted); margin-top: .7rem; }
+
+/* downloads: a table of contents with dot leaders */
+.dl { list-style: none; margin: 1.2rem 0; padding: 0; }
+.dl li { border-top: 1px solid var(--rule); }
+.dl li:last-child { border-bottom: 1px solid var(--rule); }
+.dl a.row, .dl .row {
+  display: flex; align-items: baseline; gap: .6rem; padding: .7rem .2rem;
+  text-decoration: none; color: var(--ink);
+}
+.dl a.row:hover { background: var(--wash); }
+.dl .name { font-weight: 600; }
+.dl .lead { flex: 1; border-bottom: 2px dotted var(--rule); transform: translateY(-.3em); min-width: 1rem; }
+.dl .what { color: var(--accent); font-variant: small-caps; letter-spacing: .05em; }
+.dl .soon .name, .dl .soon .what { color: var(--muted); font-weight: 400; }
+.ver { color: var(--muted); font-size: .85rem; }
+
+details {
+  border-left: 3px solid var(--rule); padding: .1rem 0 .1rem 1rem; margin: 0 0 1rem;
+}
+details[open] { border-color: var(--accent); }
+summary { cursor: pointer; list-style: none; }
+summary::-webkit-details-marker { display: none; }
+summary::before { content: "▸ "; color: var(--accent); }
+details[open] > summary::before { content: "▾ "; }
+code, pre { font-family: "SF Mono", "DejaVu Sans Mono", Menlo, Consolas, monospace; font-size: .8rem; }
+pre {
+  background: var(--wash); padding: .8rem 1rem; overflow-x: auto; margin: .6rem 0 1rem;
+  border: 1px solid var(--rule);
+}
+.cols { columns: 2; column-gap: 2rem; padding-left: 1.1rem; margin: 0 0 1rem; }
+.cols li { break-inside: avoid; margin-bottom: .3rem; }
+@media (max-width: 30rem) { .cols { columns: 1; } html { font-size: 17px; } }
+
+footer {
+  grid-column: 1 / -1 !important;
+  margin-top: 4rem; padding-top: 1rem; border-top: 1px solid var(--rule);
+  font-size: .8rem; color: var(--muted);
+}
+.mark { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="folio">
+  <a href="#top"><span class="mark">§</span> xanatoo</a>
+  <nav>
+    <a href="#download">Download</a>
+    <a href="#idea">The idea</a>
+    <a href="#reads">What it reads</a>
+    <a href="https://github.com/Grumbel/xanatoo">Source</a>
+  </nav>
+</header>
+
+<h1 id="top">xanatoo<span>.</span></h1>
+<p class="lede">A document you can walk around in. Write in it, stretch it, link it,
+and read the rest of the world in the same window.</p>
+<p>xanatoo is a small, fast document workspace in the spirit of Xanadu,
+HyperCard and the Canon&nbsp;Cat. It is one program that edits Markdown and
+Org files, opens web pages, feeds, books and forums as the same kind of
+document, and sets everything with its own typesetter. The result is
+always live: type, and the page re-sets itself under your hands.</p>
+
+<aside>
+  <b>Latest build</b><br>
+  <span class="num">@version@</span><br>
+  built from the current master of
+  <a href="https://github.com/Grumbel/xanatoo">Grumbel/xanatoo</a>
+  every night.
+</aside>
+
+<figure class="shot">
+  <img src="images/screenshot.png" width="1032" height="796"
+       alt="The xanatoo window showing its own README: a toolbar, tabs, and set text with an embedded screenshot.">
+  <figcaption>xanatoo reading its own README. Fig.&nbsp;1</figcaption>
+</figure>
+
+<h2 id="download"><a class="sec" href="#download">§</a>Download</h2>
+<p class="ver">Version <span class="num">@version@</span> — a development
+snapshot; every file below is built from the same revision.</p>
+
+<ul class="dl">
+  <li><a class="row" href="downloads/xanatoo.apk">
+    <span class="name">Android</span><span class="lead"></span><span class="what">APK · arm &amp; x86</span></a></li>
+  <li><a class="row" href="downloads/r36s/xanatoo.zip">
+    <span class="name">R36S &amp; ArkOS handhelds</span><span class="lead"></span><span class="what">PortMaster zip</span></a></li>
+  <li><div class="row">
+    <span class="name">Linux &amp; macOS</span><span class="lead"></span><span class="what">with Nix, below</span></div></li>
+  <li class="soon"><div class="row">
+    <span class="name">Windows</span><span class="lead"></span><span class="what">not yet</span></div></li>
+</ul>
+
+<details open>
+  <summary>Linux and macOS</summary>
+  <p>There is no installer yet; Nix builds the program and every library it
+  needs. With flakes enabled, run it straight from the source:</p>
+  <pre>nix run github:Grumbel/xanatoo</pre>
+  <p>or open a file or address:</p>
+  <pre>nix run github:Grumbel/xanatoo -- notes.md
+nix run github:Grumbel/xanatoo -- wikipedia:Ted_Nelson</pre>
+  <p>Without Nix: CMake, SDL2, FreeType and a C++20 compiler are enough; see
+  the <a href="https://github.com/Grumbel/xanatoo#quick-start">quick start</a>.</p>
+</details>
+<details>
+  <summary>Android</summary>
+  <p>Download the APK on the device and open it; Android will ask once to
+  allow installs from your browser. Touch is first class: tap, drag and fling
+  to scroll, long-press to select, pinch to zoom.</p>
+</details>
+<details>
+  <summary>R36S, ArkOS and other PortMaster devices</summary>
+  <p>Unzip into the <code>ports</code> folder of the SD card (or add it
+  through PortMaster’s “install local zip”). The gamepad moves the pointer
+  and scrolls.</p>
+</details>
+
+<h2 id="idea"><a class="sec" href="#idea">§</a>The idea</h2>
+<aside>
+  <b>Stretchtext</b> — Ted Nelson’s word for text that grows and shrinks in
+  place. The three notes in the download section above work the same way.
+</aside>
+<p>A page is not a file but a place. Every section has a stable identity, so
+a link can point at a passage, not just a document, and a view can be cut
+down to exactly that passage. Fold a section to its heading; open it and the
+text unfolds where you were reading.</p>
+<p>Content is the source of truth; layout is derived from it on every edit,
+so what you see is never stale. There is no “preview”. Your changes land in
+a revision store as you type, and nothing is thrown away behind a
+confirmation dialog.</p>
+<p>The whole thing is a few C++ files over SDL2 and FreeType. No Qt, no GTK,
+no browser engine.</p>
+
+<h2 id="reads"><a class="sec" href="#reads">§</a>What it reads</h2>
+<p>Anything that is mostly words becomes a document you can fold, search,
+outline and quote from:</p>
+<ul class="cols">
+  <li>Markdown, Org and plain text</li>
+  <li>Web pages, in reader mode</li>
+  <li>RSS and Atom feeds</li>
+  <li>Hacker News, Reddit, Lemmy</li>
+  <li>Wikipedia articles</li>
+  <li>EPUB, Word, LaTeX, … via pandoc</li>
+  <li>Gemini and Nostr</li>
+  <li>Image collections and a lightbox</li>
+  <li>TeX math, set from an OpenType MATH font</li>
+  <li>Site maps as an outline</li>
+</ul>
+<p>Read two things side by side and links on the left open on the right.
+Turn the page into paged columns like a book, or change the entire look with
+a short style sheet written as an S-expression.</p>
+
+<h2 id="source"><a class="sec" href="#source">§</a>Source</h2>
+<p>xanatoo is free software under the GPL, version 3 or later. The code, the
+issue tracker and the design notes live on
+<a href="https://github.com/Grumbel/xanatoo">GitHub</a>. Start with
+<a href="https://github.com/Grumbel/xanatoo/blob/master/PROPOSAL.md">PROPOSAL.md</a>
+for what it is trying to become.</p>
+
+<footer>
+  © Ingo Ruhnke · xanatoo is GPL-3.0-or-later · This page is built by Nix from the
+  xanatoo flake, so the downloads always match the version above.
+</footer>
+</div>
+</body>
+</html>
