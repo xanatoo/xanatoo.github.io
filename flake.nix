@@ -1,8 +1,8 @@
 # SPDX-FileCopyrightText: 2026 Ingo Ruhnke <grumbel@gmail.com>
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-# xanatoo website: one static page plus the downloadable builds (Android,
-# R36S) from the xanatoo flake, deployed to GitHub Pages.
+# xanatoo website: one static page, Android/R36S/Windows downloads and a
+# playable WebAssembly edition, all from the xanatoo flake.
 #
 #   nix build          # → result/ (index.html, images/, downloads/)
 #   nix run .#serve    # local preview
@@ -21,7 +21,7 @@
   };
 
   outputs = { self, nixpkgs, flake-utils, xanatoo }:
-    # x86_64-linux only: the Android SDK and NDK are not packaged elsewhere.
+    # x86_64-linux: Android, R36S, Win32/64 and wasm cross builds are hosted here.
     flake-utils.lib.eachSystem [ "x86_64-linux" ] (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
@@ -29,7 +29,7 @@
         version = app.xanatoo-unwrapped.version;
 
         site = pkgs.runCommand "xanatoo-site" { } ''
-          mkdir -p $out/downloads/r36s
+          mkdir -p $out/downloads/r36s $out/wasm
           substitute ${./index.html} $out/index.html --subst-var-by version ${version}
           cp -r ${./images} $out/images
 
@@ -37,6 +37,15 @@
           cp -v ${app.xanatoo-android}/*.apk $out/downloads/xanatoo.apk
           # PortMaster expects the zip under the name its port.json gives.
           cp -v ${app.xanatoo-r36s-portmaster-zip}/xanatoo.zip $out/downloads/r36s/xanatoo.zip
+          cp -v ${app.xanatoo-win32-zip}/*.zip $out/downloads/xanatoo-win32.zip
+          cp -v ${app.xanatoo-win64-zip}/*.zip $out/downloads/xanatoo-win64.zip
+
+          # The generated Emscripten index.html references relative .js,
+          # .wasm and .data files, so preserve the entire site under /wasm/.
+          cp -r ${app.xanatoo-wasm}/. $out/wasm/
+          for asset in index.html xanatoo.js xanatoo.wasm xanatoo.data; do
+            test -s "$out/wasm/$asset"
+          done
           chmod -R u+w $out
         '';
 

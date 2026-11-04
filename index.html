@@ -6,7 +6,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>xanatoo — read, write, follow the connections</title>
-<meta name="description" content="xanatoo is a lightweight native hypertext workspace for live editing, passage links, books, feeds and text-oriented web reading. Download experimental builds for Android and R36S or run with Nix.">
+<meta name="description" content="xanatoo is a lightweight hypertext workspace for live editing, passage links, books, feeds and text-oriented web reading. Try the WebAssembly preview or download Linux, Android, Windows and handheld builds.">
 <style>
 :root {
   --paper: #f6f1e6;
@@ -118,7 +118,6 @@ aside b { color: var(--ink); font-weight: 600; }
 .dl .name { font-weight: 600; }
 .dl .lead { flex: 1; border-bottom: 2px dotted var(--rule); transform: translateY(-.3em); min-width: 1rem; }
 .dl .what { color: var(--accent); font-variant: small-caps; letter-spacing: .05em; }
-.dl .soon .name, .dl .soon .what { color: var(--muted); font-weight: 400; }
 .ver { color: var(--muted); font-size: .85rem; }
 
 details {
@@ -192,11 +191,20 @@ snapshot; every file below is built from the same revision.</p>
     <span class="name">Android</span><span class="lead"></span><span class="what">APK · arm &amp; x86</span></a></li>
   <li><a class="row" href="downloads/r36s/xanatoo.zip">
     <span class="name">R36S &amp; ArkOS handhelds</span><span class="lead"></span><span class="what">PortMaster zip</span></a></li>
+  <li><a class="row" href="downloads/xanatoo-win64.zip">
+    <span class="name">Windows 64-bit</span><span class="lead"></span><span class="what">ZIP · offline edition</span></a></li>
+  <li><a class="row" href="downloads/xanatoo-win32.zip">
+    <span class="name">Windows 32-bit</span><span class="lead"></span><span class="what">ZIP · offline edition</span></a></li>
+  <li><a class="row" href="wasm/">
+    <span class="name">Try in your browser</span><span class="lead"></span><span class="what">WASM · open ↗</span></a></li>
   <li><div class="row">
     <span class="name">Linux &amp; macOS</span><span class="lead"></span><span class="what">with Nix, below</span></div></li>
-  <li class="soon"><div class="row">
-    <span class="name">Windows</span><span class="lead"></span><span class="what">not yet</span></div></li>
 </ul>
+
+<p class="ver">The Windows and browser versions are early <em>offline</em>
+editions. They include the editor, local document readers and passage links,
+but not the in-app network services. The browser preview does not save changes
+or import files from your computer yet.</p>
 
 <details open>
   <summary>Linux and macOS</summary>
@@ -221,6 +229,22 @@ nix run github:Grumbel/xanatoo -- wikipedia:Ted_Nelson</pre>
   <p>Unzip into the <code>ports</code> folder of the SD card (or add it
   through PortMaster’s “install local zip”). The gamepad controls a software
   pointer and scrolls; an on-screen keyboard handles text input.</p>
+</details>
+<details>
+  <summary>Windows 32- and 64-bit</summary>
+  <p>Download the ZIP matching your Windows architecture and extract the whole
+  directory. Run <code>bin/xanatoo.exe</code>; the included libraries, styles,
+  toolbar icons, examples and fonts must stay alongside it. These are initial
+  MinGW-w64 builds without the built-in HTTP, Gemini or social-site readers.
+  Ordinary web links can still open in your default browser.</p>
+</details>
+<details>
+  <summary>WebAssembly — try it in a browser</summary>
+  <p><a href="wasm/">Open the live preview</a> without installing anything.
+  It starts with xanatoo’s welcome document and demonstrates text editing,
+  layout and navigation. Changes exist only in the current session; refreshing
+  the page discards them. File import, exports, online services and persistent
+  storage are still planned.</p>
 </details>
 
 <h2 id="idea"><a class="sec" href="#idea">§</a>The idea</h2>

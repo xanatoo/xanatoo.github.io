@@ -23,9 +23,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # The Android build needs the SDK and NDK, the R36S port a cross
-      # compiler: several GB in the Nix store. Make room by removing the
-      # runner's preinstalled toolchains, which the build does not use.
+      # Android SDK/NDK, R36S, MinGW and Emscripten need substantial Nix
+      # store space. Remove the runner's unused preinstalled toolchains.
       - name: Free disk space
         run: |
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
