@@ -1,6 +1,11 @@
 # xanatoo website
 
 Static site for [xanatoo](https://github.com/Grumbel/xanatoo).
+The landing page is deliberately typeset like an article, with a concise
+overview of the current editor, passage model, supported readers, and a
+hands-on tour. Feature claims should track the main repository's `README.md`,
+`AGENTS.md` and `TODO.md`; do not describe planned passage or revision
+features as already available.
 
 - `flake.nix` pulls the Android APK and the R36S PortMaster zip from the
   xanatoo flake and assembles `index.html`, `images/` and `downloads/` into
@@ -8,8 +13,12 @@ Static site for [xanatoo](https://github.com/Grumbel/xanatoo).
 - `.github/workflows/pages.yml` runs `nix flake update xanatoo` and
   `nix build` on every push and nightly, and deploys `result/` to GitHub Pages
   (Settings → Pages → Source: GitHub Actions).
-- Linux / macOS are served as `nix run github:Grumbel/xanatoo` instructions;
+- Linux / Apple Silicon macOS are served as `nix run github:Grumbel/xanatoo` instructions;
   there is no Windows build yet.
+
+The page also states the current experimental-network caveat: OpenSSL and
+Mbed TLS clients do not yet verify peer certificates. Update that warning
+when certificate verification is implemented in the application.
 
 ```bash
 nix build            # result/index.html result/downloads/xanatoo.apk …

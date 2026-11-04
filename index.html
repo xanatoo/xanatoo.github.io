@@ -5,8 +5,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>xanatoo — a document you can walk around in</title>
-<meta name="description" content="xanatoo is an interactive document composition engine: edit, stretch, link and browse in one place. Downloads for every platform.">
+<title>xanatoo — read, write, follow the connections</title>
+<meta name="description" content="xanatoo is a lightweight native hypertext workspace for live editing, passage links, books, feeds and text-oriented web reading. Download experimental builds for Android and R36S or run with Nix.">
 <style>
 :root {
   --paper: #f6f1e6;
@@ -64,7 +64,7 @@ a:hover { color: var(--accent); }
 }
 .folio a { color: inherit; text-decoration: none; }
 .folio a:hover { color: var(--accent); }
-.folio nav { display: flex; gap: 1.2rem; }
+.folio nav { display: flex; gap: 1.2rem; flex-wrap: wrap; }
 
 h1 {
   font-size: 4.2rem; line-height: 1; letter-spacing: -.03em;
@@ -155,6 +155,7 @@ footer {
     <a href="#download">Download</a>
     <a href="#idea">The idea</a>
     <a href="#reads">What it reads</a>
+    <a href="#work">Working with it</a>
     <a href="https://github.com/Grumbel/xanatoo">Source</a>
   </nav>
 </header>
@@ -162,11 +163,11 @@ footer {
 <h1 id="top">xanatoo<span>.</span></h1>
 <p class="lede">A document you can walk around in. Write in it, stretch it, link it,
 and read the rest of the world in the same window.</p>
-<p>xanatoo is a small, fast document workspace in the spirit of Xanadu,
-HyperCard and the Canon&nbsp;Cat. It is one program that edits Markdown and
-Org files, opens web pages, feeds, books and forums as the same kind of
-document, and sets everything with its own typesetter. The result is
-always live: type, and the page re-sets itself under your hands.</p>
+<p>xanatoo is a lightweight, native hypertext workspace in the spirit of Xanadu,
+HyperCard and the Canon&nbsp;Cat. It edits Markdown, Org and structured
+documents in place; it also reads web pages, feeds, books and discussions
+through the same semantic layout system. Type, fold a section, or resize
+a pane, and the page reflows around you.</p>
 
 <aside>
   <b>Latest build</b><br>
@@ -179,7 +180,7 @@ always live: type, and the page re-sets itself under your hands.</p>
 <figure class="shot">
   <img src="images/screenshot.png" width="1032" height="796"
        alt="The xanatoo window showing its own README: a toolbar, tabs, and set text with an embedded screenshot.">
-  <figcaption>xanatoo reading its own README. Fig.&nbsp;1</figcaption>
+  <figcaption>xanatoo reading its own README. An editable document, not a rendered preview. Fig.&nbsp;1</figcaption>
 </figure>
 
 <h2 id="download"><a class="sec" href="#download">§</a>Download</h2>
@@ -200,13 +201,14 @@ snapshot; every file below is built from the same revision.</p>
 <details open>
   <summary>Linux and macOS</summary>
   <p>There is no installer yet; Nix builds the program and every library it
-  needs. With flakes enabled, run it straight from the source:</p>
+  needs. With flakes enabled, run it directly:</p>
   <pre>nix run github:Grumbel/xanatoo</pre>
   <p>or open a file or address:</p>
   <pre>nix run github:Grumbel/xanatoo -- notes.md
 nix run github:Grumbel/xanatoo -- wikipedia:Ted_Nelson</pre>
-  <p>Without Nix: CMake, SDL2, FreeType and a C++20 compiler are enough; see
-  the <a href="https://github.com/Grumbel/xanatoo#quick-start">quick start</a>.</p>
+  <p>Without Nix: use CMake with a C++20 compiler, SDL2, FreeType and the
+  dependencies of the enabled optional features. See the
+  <a href="https://github.com/Grumbel/xanatoo#run-it">build instructions</a>.</p>
 </details>
 <details>
   <summary>Android</summary>
@@ -217,51 +219,94 @@ nix run github:Grumbel/xanatoo -- wikipedia:Ted_Nelson</pre>
 <details>
   <summary>R36S, ArkOS and other PortMaster devices</summary>
   <p>Unzip into the <code>ports</code> folder of the SD card (or add it
-  through PortMaster’s “install local zip”). The gamepad moves the pointer
-  and scrolls.</p>
+  through PortMaster’s “install local zip”). The gamepad controls a software
+  pointer and scrolls; an on-screen keyboard handles text input.</p>
 </details>
 
 <h2 id="idea"><a class="sec" href="#idea">§</a>The idea</h2>
 <aside>
   <b>Stretchtext</b> — Ted Nelson’s word for text that grows and shrinks in
-  place. The three notes in the download section above work the same way.
+  place. Even the disclosure notes on this page are a small echo of it.
 </aside>
-<p>A page is not a file but a place. Every section has a stable identity, so
-a link can point at a passage, not just a document, and a view can be cut
-down to exactly that passage. Fold a section to its heading; open it and the
-text unfolds where you were reading.</p>
-<p>Content is the source of truth; layout is derived from it on every edit,
-so what you see is never stale. There is no “preview”. Your changes land in
-a revision store as you type, and nothing is thrown away behind a
-confirmation dialog.</p>
-<p>The whole thing is a few C++ files over SDL2 and FreeType. No Qt, no GTK,
-no browser engine.</p>
+<p>Most document tools treat a link as a jump to another file. xanatoo treats
+a <em>passage</em> as something you can name, bookmark, mark in context, show
+on its own, or include elsewhere. Named sections and text quotes have
+addresses; the arrangement on screen is just one view of the content.</p>
+<pre>notes.md#id:introduction     show the whole page; mark the section
+notes.md//id:introduction    show the section as its own view</pre>
+<p>Fold a section to its heading or expand a stretchtext note in place.
+Switch from a flowing document to ebook-style pages, or change its appearance
+with a semantic style sheet. The document itself does not need to change.</p>
+<p>Editing is direct: no source/preview split, no stale rendering. Local
+unsaved edits are kept as drafts in a content-addressed revision store, and
+the last session's tabs and reading positions can be restored.</p>
 
 <h2 id="reads"><a class="sec" href="#reads">§</a>What it reads</h2>
-<p>Anything that is mostly words becomes a document you can fold, search,
-outline and quote from:</p>
+<p>Different sources become a common, navigable document structure, with
+headings, links, figures and threads where the source supports them:</p>
 <ul class="cols">
-  <li>Markdown, Org and plain text</li>
-  <li>Web pages, in reader mode</li>
-  <li>RSS and Atom feeds</li>
-  <li>Hacker News, Reddit, Lemmy</li>
-  <li>Wikipedia articles</li>
-  <li>EPUB, Word, LaTeX, … via pandoc</li>
-  <li>Gemini and Nostr</li>
-  <li>Image collections and a lightbox</li>
-  <li>TeX math, set from an OpenType MATH font</li>
-  <li>Site maps as an outline</li>
+  <li>Markdown, Org, S-expression documents</li>
+  <li>Semantic HTML and Wikipedia articles</li>
+  <li>RSS/Atom feeds and Gemini capsules</li>
+  <li>Hacker News, Reddit, Lemmy, Nostr</li>
+  <li>EPUB and books from Standard Ebooks/Gutenberg</li>
+  <li>DOCX, ODT, LaTeX and more through Pandoc</li>
+  <li>Images, figures, collections and a zoomable lightbox</li>
+  <li>Inline/display TeX math via OpenType MATH</li>
+  <li>Website sitemaps and page navigation</li>
+  <li>Search results from configurable engines</li>
 </ul>
-<p>Read two things side by side and links on the left open on the right.
-Turn the page into paged columns like a book, or change the entire look with
-a short style sheet written as an S-expression.</p>
+<p>A built-in directory collects links to feeds and sites. The search bar
+offers Wikipedia, arXiv, Internet Archive, book catalogues, discussion
+services, and independent web search engines, with custom engines in a small
+S-expression file.</p>
+<aside>
+  <b>Reader, not browser.</b> Web pages are read-only semantic documents;
+  xanatoo does not run JavaScript or render site CSS. It is deliberately
+  suited to reading, not interactive web applications.
+</aside>
+
+<h2 id="work"><a class="sec" href="#work">§</a>Working with it</h2>
+<p>Several reading and editing tools cooperate without separate modes or
+plugins:</p>
+<details>
+  <summary><b>Read in parallel</b> — tabs, panes and windows</summary>
+  <p>Split the centre view, open a link from the left into the right, compare
+  two documents with diff marks, or tear a tab into a floating/dockable
+  document window. Outline, bookmarks, backlinks, and page navigation are
+  dockable panels rather than copies of the document.</p>
+</details>
+<details>
+  <summary><b>Keep your place</b> — passages and bookmarks</summary>
+  <p>Bookmark a page, a selected quotation, or a reading position. Marks and
+  margin ribbons bring the passage back in context. Reader mode hides web
+  navigation clutter; paged mode lays the text out in one to three columns.
+  Both are choices of view, not changes to the document.</p>
+</details>
+<details>
+  <summary><b>Compose freely</b> — sections, columns and side notes</summary>
+  <p>Drag blocks to rearrange them, resize column gutters and images,
+  include a labelled passage from another document, and set notes in
+  the page margin. Footnotes, bibliography, math and figures belong to
+  the semantic document, while typography comes from the chosen style.</p>
+</details>
+<p>Start with <a href="https://github.com/Grumbel/xanatoo/blob/master/examples/tour.md">the feature tour</a>
+or read the <a href="https://github.com/Grumbel/xanatoo/blob/master/docs/PASSAGES.md">passage design</a>
+to see where the hypertext model is heading.</p>
+
+<p class="ver"><b>Development status.</b> This is experimental software.
+The built-in OpenSSL and Mbed TLS clients currently do not verify peer
+certificates; do not use them for sensitive or authenticated browsing.
+Service APIs may also change.</p>
 
 <h2 id="source"><a class="sec" href="#source">§</a>Source</h2>
 <p>xanatoo is free software under the GPL, version 3 or later. The code, the
 issue tracker and the design notes live on
 <a href="https://github.com/Grumbel/xanatoo">GitHub</a>. Start with
 <a href="https://github.com/Grumbel/xanatoo/blob/master/PROPOSAL.md">PROPOSAL.md</a>
-for what it is trying to become.</p>
+for the original vision, or the
+<a href="https://github.com/Grumbel/xanatoo/blob/master/README.md">README</a>
+for builds, formats and keyboard controls.</p>
 
 <footer>
   © Ingo Ruhnke · xanatoo is GPL-3.0-or-later · This page is built by Nix from the
