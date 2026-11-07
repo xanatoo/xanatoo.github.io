@@ -34,6 +34,22 @@
         "type": "github"
       }
     },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1791594108,
+        "narHash": "sha256-XK4KceonkwD8LuMAt/vNrz982mXJM5jeHAxMwsUXXAQ=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "6510408d147d8c5e6d76043e899e9251756f6a75",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -58,16 +74,14 @@
     },
     "xanatoo": {
       "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
+        "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1794014782,
-        "narHash": "sha256-IZ3ZUVgCCpr10bwyIPYjhcVP0MRw0MQ6lzXDTSIQy9c=",
+        "lastModified": 1794018162,
+        "narHash": "sha256-EWfQ0P8Dur8+5z1l+AZeoF/NbdSQB1j0Dw+AYuCg3Ks=",
         "ref": "refs/heads/master",
-        "rev": "872006eafc9ab8071525be5b1da589bddd8e076e",
-        "revCount": 503,
+        "rev": "9fa2049d0c2b7eaa6c65dd580af6501a02c9007c",
+        "revCount": 504,
         "type": "git",
         "url": "https://github.com/Grumbel/xanatoo"
       },
