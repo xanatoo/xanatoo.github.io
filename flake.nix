@@ -35,6 +35,10 @@
 
           # Stable file names, so links never change (the version is on the page).
           cp -v ${app.xanatoo-android}/*.apk $out/downloads/xanatoo.apk
+          # Same commit timestamp used for the APK Android versionCode.
+          cat > $out/downloads/android-update.json <<'EOF'
+          {"versionCode": ${toString (xanatoo.lastModified or 1)}, "versionName": "${version}"}
+          EOF
           # PortMaster expects the zip under the name its port.json gives.
           cp -v ${app.xanatoo-r36s-portmaster-zip}/xanatoo.zip $out/downloads/r36s/xanatoo.zip
           cp -v ${app.xanatoo-win32-zip}/*.zip $out/downloads/xanatoo-win32.zip
