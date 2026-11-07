@@ -41,19 +41,6 @@
         "xanatoo": "xanatoo"
       }
     },
-    "sdl2-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1714580206,
-        "narHash": "sha256-49TNuKx5ec+rEK49rKjqrKStQzuhk8zdu8mRe/amUBk=",
-        "type": "tarball",
-        "url": "https://github.com/libsdl-org/SDL/releases/download/release-2.30.3/SDL2-2.30.3.tar.gz"
-      },
-      "original": {
-        "type": "tarball",
-        "url": "https://github.com/libsdl-org/SDL/releases/download/release-2.30.3/SDL2-2.30.3.tar.gz"
-      }
-    },
     "systems": {
       "locked": {
         "lastModified": 1681028828,
@@ -73,15 +60,14 @@
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
-        ],
-        "sdl2-src": "sdl2-src"
+        ]
       },
       "locked": {
-        "lastModified": 1793838330,
-        "narHash": "sha256-nEyDSzjJk1upqqDoQhr5QPCNvgOBE338j4hNJ4Ewbr4=",
+        "lastModified": 1794014782,
+        "narHash": "sha256-IZ3ZUVgCCpr10bwyIPYjhcVP0MRw0MQ6lzXDTSIQy9c=",
         "ref": "refs/heads/master",
-        "rev": "fbdfdcb666063daf5ca96df8201a4d90a53ae97c",
-        "revCount": 446,
+        "rev": "872006eafc9ab8071525be5b1da589bddd8e076e",
+        "revCount": 503,
         "type": "git",
         "url": "https://github.com/Grumbel/xanatoo"
       },
