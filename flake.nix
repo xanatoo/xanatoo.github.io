@@ -17,7 +17,7 @@
     # git+https, not github: only a git fetch carries the commit count the
     # version (<VERSION>.<count>+g<rev>) is made of.
     xanatoo.url = "git+https://github.com/Grumbel/xanatoo";
-    xanatoo.inputs.nixpkgs.follows = "nixpkgs";
+    # xanatoo.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { self, nixpkgs, flake-utils, xanatoo }:
