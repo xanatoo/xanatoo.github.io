@@ -77,11 +77,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1794301068,
-        "narHash": "sha256-3GfXCydb5F0qtQ27hFEd4rw8EQ24os9NonnrrUASaUA=",
+        "lastModified": 1794329450,
+        "narHash": "sha256-ZCEyPzF6GCyW2CBVfF1fE6xcpass9y46xYY2eRIkOKQ=",
         "ref": "refs/heads/master",
-        "rev": "63f84929b8d790d1e95083719ccc64b2752f68d6",
-        "revCount": 563,
+        "rev": "310bd9eb526f679ee93c4c5d8512693b02bcd0bb",
+        "revCount": 564,
         "type": "git",
         "url": "https://github.com/Grumbel/xanatoo"
       },
