@@ -1,6 +1,6 @@
 # xanatoo website
 
-Static site for [xanatoo](https://github.com/Grumbel/xanatoo).
+Static site for [xanatoo](https://github.com/xanatoo/xanatoo).
 The landing page is deliberately typeset like an article, with a concise
 overview of the current editor, passage model, supported readers, and a
 hands-on tour. Feature claims should track the main repository's `README.md`,
@@ -14,7 +14,7 @@ features as already available.
 - `.github/workflows/pages.yml` runs `nix flake update xanatoo` and
   `nix build` on every push and nightly, and deploys `result/` to GitHub Pages
   (Settings → Pages → Source: GitHub Actions).
-- Linux / Apple Silicon macOS are served as `nix run github:Grumbel/xanatoo`
+- Linux / Apple Silicon macOS are served as `nix run github:xanatoo/xanatoo`
   instructions. Win32/Win64 packages and a playable WASM preview use the
   feature-limited offline profile; their limitations are stated on the page.
 - The website's xanatoo input must contain the portable flake outputs
