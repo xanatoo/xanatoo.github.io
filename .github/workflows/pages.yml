@@ -1,11 +1,10 @@
 # SPDX-FileCopyrightText: 2026 Ingo Ruhnke <grumbel@gmail.com>
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-# Assemble the site from xanatoo's rolling `continuous` release and deploy.
-# xanatoo's artifacts workflow replaces a target's release assets only when
-# that target builds, then triggers this workflow (workflow_dispatch), so
-# each download goes live as soon as its build succeeds and a failed build
-# keeps the previous one. Takes a minute; nothing is compiled here.
+# Assemble the site with xanatoo's `site-from-release` flake app (page from
+# xanatoo master's website/, downloads from its rolling `continuous`
+# release, each target replaced only when its build succeeds) and deploy.
+# xanatoo's CI triggers this after every published build and page edit.
 
 name: Deploy site
 
@@ -32,14 +31,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Fetch builds
-        run: scripts/fetch-builds.sh builds
+      - uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Assemble
         run: |
-          scripts/assemble.sh builds site
+          nix run github:xanatoo/xanatoo#site-from-release -- site
           find site -type f -printf '%10s  %p\n' | sort -k2
 
       - uses: actions/upload-pages-artifact@v3
