@@ -118,6 +118,7 @@ aside b { color: var(--ink); font-weight: 600; }
 .dl .name { font-weight: 600; }
 .dl .lead { flex: 1; border-bottom: 2px dotted var(--rule); transform: translateY(-.3em); min-width: 1rem; }
 .dl .what { color: var(--accent); font-variant: small-caps; letter-spacing: .05em; }
+.dl .rev { color: var(--muted); font-size: .75rem; font-family: "SF Mono", "DejaVu Sans Mono", Menlo, Consolas, monospace; }
 .ver { color: var(--muted); font-size: .85rem; }
 
 details {
@@ -135,7 +136,7 @@ pre {
 }
 .cols { columns: 2; column-gap: 2rem; padding-left: 1.1rem; margin: 0 0 1rem; }
 .cols li { break-inside: avoid; margin-bottom: .3rem; }
-@media (max-width: 30rem) { .cols { columns: 1; } html { font-size: 17px; } }
+@media (max-width: 30rem) { .cols { columns: 1; } html { font-size: 17px; } .dl .rev { display: none; } }
 
 footer {
   grid-column: 1 / -1 !important;
@@ -173,7 +174,7 @@ a pane, and the page reflows around you.</p>
   <span class="num">@version@</span><br>
   built from the current master of
   <a href="https://github.com/xanatoo/xanatoo">xanatoo/xanatoo</a>
-  every night.
+  on every push.
 </aside>
 
 <figure class="shot">
@@ -184,19 +185,19 @@ a pane, and the page reflows around you.</p>
 
 <h2 id="download"><a class="sec" href="#download">§</a>Download</h2>
 <p class="ver">Version <span class="num">@version@</span> — a development
-snapshot; every file below is built from the same revision.</p>
+snapshot; @version-note@</p>
 
 <ul class="dl">
   <li><a class="row" href="downloads/xanatoo.apk">
-    <span class="name">Android</span><span class="lead"></span><span class="what">APK · arm &amp; x86</span></a></li>
+    <span class="name">Android</span><span class="rev">@version-android@</span><span class="lead"></span><span class="what">APK · arm &amp; x86</span></a></li>
   <li><a class="row" href="downloads/r36s/xanatoo.zip">
-    <span class="name">R36S &amp; ArkOS handhelds</span><span class="lead"></span><span class="what">PortMaster zip</span></a></li>
+    <span class="name">R36S &amp; ArkOS handhelds</span><span class="rev">@version-r36s@</span><span class="lead"></span><span class="what">PortMaster zip</span></a></li>
   <li><a class="row" href="downloads/xanatoo-win64.zip">
-    <span class="name">Windows 64-bit</span><span class="lead"></span><span class="what">ZIP · offline edition</span></a></li>
+    <span class="name">Windows 64-bit</span><span class="rev">@version-win64@</span><span class="lead"></span><span class="what">ZIP · offline edition</span></a></li>
   <li><a class="row" href="downloads/xanatoo-win32.zip">
-    <span class="name">Windows 32-bit</span><span class="lead"></span><span class="what">ZIP · offline edition</span></a></li>
+    <span class="name">Windows 32-bit</span><span class="rev">@version-win32@</span><span class="lead"></span><span class="what">ZIP · offline edition</span></a></li>
   <li><a class="row" href="wasm/">
-    <span class="name">Try in your browser</span><span class="lead"></span><span class="what">WASM · open ↗</span></a></li>
+    <span class="name">Try in your browser</span><span class="rev">@version-wasm@</span><span class="lead"></span><span class="what">WASM · open ↗</span></a></li>
   <li><div class="row">
     <span class="name">Linux &amp; macOS</span><span class="lead"></span><span class="what">with Nix, below</span></div></li>
 </ul>
@@ -333,8 +334,8 @@ for the original vision, or the
 for builds, formats and keyboard controls.</p>
 
 <footer>
-  © Ingo Ruhnke · xanatoo is GPL-3.0-or-later · This page is built by Nix from the
-  xanatoo flake, so the downloads always match the version above.
+  © Ingo Ruhnke · xanatoo is GPL-3.0-or-later · Each download is published as soon as its
+  build of xanatoo master succeeds; the version next to it says which one.
 </footer>
 </div>
 </body>

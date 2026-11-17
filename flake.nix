@@ -2,9 +2,13 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 # xanatoo website: one static page, Android/R36S/Windows downloads and a
-# playable WebAssembly edition, all from the xanatoo flake.
+# playable WebAssembly edition.
 #
-#   nix build          # → result/ (index.html, images/, downloads/)
+# The deployed site is assembled in CI from xanatoo's rolling release
+# (scripts/fetch-builds.sh + scripts/assemble.sh). This flake builds the
+# same site with every download built from the locked xanatoo input:
+#
+#   nix build          # → result/ (index.html, images/, downloads/, wasm/)
 #   nix run .#serve    # local preview
 #
 {
@@ -28,29 +32,25 @@
         app = xanatoo.packages.${system};
         version = app.xanatoo-unwrapped.version;
 
-        site = pkgs.runCommand "xanatoo-site" { } ''
-          mkdir -p $out/downloads/r36s $out/wasm
-          substitute ${./index.html} $out/index.html --subst-var-by version ${version}
-          cp -r ${./images} $out/images
-
-          # Stable file names, so links never change (the version is on the page).
-          cp -v ${app.xanatoo-android}/*.apk $out/downloads/xanatoo.apk
-          # Same commit timestamp used for the APK Android versionCode.
-          cat > $out/downloads/android-update.json <<'EOF'
-          {"versionCode": ${toString (xanatoo.lastModified or 1)}, "versionName": "${version}"}
-          EOF
-          # PortMaster expects the zip under the name its port.json gives.
-          cp -v ${app.xanatoo-r36s-portmaster-zip}/xanatoo.zip $out/downloads/r36s/xanatoo.zip
-          cp -v ${app.xanatoo-win32-zip}/*.zip $out/downloads/xanatoo-win32.zip
-          cp -v ${app.xanatoo-win64-zip}/*.zip $out/downloads/xanatoo-win64.zip
-
-          # The generated Emscripten index.html references relative .js,
-          # .wasm and .data files, so preserve the entire site under /wasm/.
+        # Same layout as CI's fetch-builds.sh, all from one xanatoo revision.
+        builds = pkgs.runCommand "xanatoo-site-builds" { } ''
+          mkdir -p $out/versions $out/wasm
+          cp -v ${app.xanatoo-android}/*.apk $out/xanatoo.apk
+          cp -v ${app.xanatoo-r36s-portmaster-zip}/xanatoo.zip $out/xanatoo-r36s.zip
+          cp -v ${app.xanatoo-win32-zip}/*.zip $out/xanatoo-win32.zip
+          cp -v ${app.xanatoo-win64-zip}/*.zip $out/xanatoo-win64.zip
           cp -r ${app.xanatoo-wasm}/. $out/wasm/
-          for asset in index.html xanatoo.js xanatoo.wasm xanatoo.data; do
-            test -s "$out/wasm/$asset"
+          for t in android r36s win32 win64 wasm; do
+            cat > $out/versions/$t.json <<EOF
+          {"target": "$t", "version": "${version}", "rev": "${xanatoo.rev or ""}",
+           "revCount": ${toString (xanatoo.revCount or 0)},
+           "lastModified": ${toString (xanatoo.lastModified or 1)}}
+          EOF
           done
-          chmod -R u+w $out
+        '';
+
+        site = pkgs.runCommand "xanatoo-site" { nativeBuildInputs = [ pkgs.jq ]; } ''
+          bash ${./scripts/assemble.sh} ${builds} $out ${./.}
         '';
 
         serveApp = {
@@ -61,7 +61,7 @@
           '');
         };
       in {
-        packages = { default = site; inherit site; };
+        packages = { default = site; inherit site builds; };
         apps = { default = serveApp; serve = serveApp; };
       });
 }

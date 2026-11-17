@@ -5,3 +5,5 @@ result-*
 *.swp
 *~
 .DS_Store
+builds/
+site/

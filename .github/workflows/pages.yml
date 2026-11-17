@@ -1,10 +1,19 @@
+# SPDX-FileCopyrightText: 2026 Ingo Ruhnke <grumbel@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Assemble the site from xanatoo's rolling `continuous` release and deploy.
+# xanatoo's artifacts workflow replaces a target's release assets only when
+# that target builds, then triggers this workflow (workflow_dispatch), so
+# each download goes live as soon as its build succeeds and a failed build
+# keeps the previous one. Takes a minute; nothing is compiled here.
+
 name: Deploy site
 
 on:
   push:
     branches: [master]
   workflow_dispatch:
-  # Pick up new xanatoo commits: the lock is bumped before building (see Build)
+  # Fallback if a trigger from xanatoo was missed.
   schedule:
     - cron: "0 5 * * *"
 
@@ -13,9 +22,11 @@ permissions:
   pages: write
   id-token: write
 
+# Never cancel: a queued run replaces older queued ones and reads the
+# release when it starts, so the last run always sees every finished build.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -23,36 +34,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Android SDK/NDK, R36S, MinGW and Emscripten need substantial Nix
-      # store space. Remove the runner's unused preinstalled toolchains.
-      - name: Free disk space
+      - name: Fetch builds
+        run: scripts/fetch-builds.sh builds
+
+      - name: Assemble
         run: |
-          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
-                      /opt/hostedtoolcache/CodeQL /usr/local/share/boost
-          df -h /
+          scripts/assemble.sh builds site
+          find site -type f -printf '%10s  %p\n' | sort -k2
 
-      - uses: cachix/install-nix-action@v31
+      - uses: actions/upload-pages-artifact@v3
         with:
-          github_access_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: nix-community/cache-nix-action@v7
-        with:
-          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
-          restore-prefixes-first-match: |
-            nix-${{ runner.os }}-
-
-      # The site shows the latest xanatoo: move the lock to its master head
-      # (a no-op on pushes that already follow it).
-      - name: Follow latest xanatoo
-        run: nix flake update xanatoo
-
-      - name: Build
-        run: nix build --print-build-logs
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: result
+          path: site
 
   deploy:
     needs: build
